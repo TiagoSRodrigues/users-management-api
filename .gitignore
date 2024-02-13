@@ -1,0 +1,7 @@
+.vscode
+*/__pycache__
+/lambda_functions/__pycache__
+/lambda_functions/.pytest_cache
+.pytest_cache
+.env
+.draft.py
