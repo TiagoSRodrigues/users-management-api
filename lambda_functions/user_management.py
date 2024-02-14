@@ -47,6 +47,7 @@ def check_user_exists(username: str, email: str) -> bool:
                 403: {"description": "Forbidden - The user does not have the necessary permissions"},
                 404: {"description": "Not Found - The resource was not found"},
                 408: {"description": "Request Timeout - The server timed out waiting for the request"},
+                422: {"description": "Unprocessable Entity - invalid request"},
                 500: {"description": "Internal Server Error - An error occurred on the server"}
             },          status_code=status.HTTP_201_CREATED)
 async def create_user(user: User):
@@ -98,6 +99,7 @@ async def create_user(user: User):
                 403: {"description": "Forbidden - The user does not have the necessary permissions"},
                 404: {"description": "Not Found - The resource was not found"},
                 408: {"description": "Request Timeout - The server timed out waiting for the request"},
+                422: {"description": "Unprocessable Entity - invalid request"},
                 500: {"description": "Internal Server Error - An error occurred on the server"}
             }, )
 async def update_user(username: str, user: User):
@@ -151,6 +153,7 @@ async def update_user(username: str, user: User):
                 403: {"description": "Forbidden - The user does not have the necessary permissions"},
                 404: {"description": "Not Found - The resource was not found"},
                 408: {"description": "Request Timeout - The server timed out waiting for the request"},
+                422: {"description": "Unprocessable Entity - invalid request"},
                 500: {"description": "Internal Server Error - An error occurred on the server"}
             }, )
 async def list_users(filter: str = Query(None, description="Filter key and value separated by ':'"), fields: str = Query(None, description="Comma-separated list of fields to return")):
@@ -199,6 +202,7 @@ async def list_users(filter: str = Query(None, description="Filter key and value
                 403: {"description": "Forbidden - The user does not have the necessary permissions"},
                 404: {"description": "Not Found - The resource was not found"},
                 408: {"description": "Request Timeout - The server timed out waiting for the request"},
+                422: {"description": "Unprocessable Entity - invalid request"},
                 500: {"description": "Internal Server Error - An error occurred on the server"}
             }, )
 async def delete_user(username: str):
@@ -237,6 +241,7 @@ async def delete_user(username: str):
                 403: {"description": "Forbidden - The user does not have the necessary permissions"},
                 404: {"description": "Not Found - The resource was not found"},
                 408: {"description": "Request Timeout - The server timed out waiting for the request"},
+                422: {"description": "Unprocessable Entity - invalid request"},
                 500: {"description": "Internal Server Error - An error occurred on the server"}
             }, )
 async def deactivate_user(username: str, user: User):
