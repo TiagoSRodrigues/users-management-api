@@ -24,7 +24,7 @@ class User(BaseModel):
 
 app = FastAPI(
     title="User Management API",
-    description="User Management API documentation",
+    description="User Management API documentation - https://github.com/TiagoSRodrigues/users-management-api",
     version="1.0.0"
 )
 
