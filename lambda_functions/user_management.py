@@ -163,25 +163,6 @@ async def list_users(filter: str = Query(None, description="Filter key and value
     return filtered_items
 
 #delete
-# @app.delete(f"/{API_VERSION}/delete/{{userId}}", summary="Deletes a user by userID", response_description="Confirmation message")
-# async def delete_user_john(userId):
-#     """
-#     Delete a user based on their userId.
-
-#     - **userId**: The userId of the user to be deleted.
-
-#     Returns a confirmation message upon successful deletion.
-#     """
-#     try:
-#         response = table.delete_item(
-#                 Key={'userId': userId}
-#                 )
-#         return {"response":response,"message": "User deleted successfully"}
-
-#     except boto3.exceptions.Boto3Error as e:
-#         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
-
-#delete
 @app.delete(f"/{API_VERSION}/users/{{username}}", summary="Deletes a user by username", response_description="Confirmation message")
 async def delete_user(username: str):
     """
@@ -253,8 +234,8 @@ async def deactivate_user(username: str, user: User):
     return {"message": "User deactivated successfully"}
 
 
-@app.options(f"/{API_VERSION}/ping")
-async def options_for_some_resource():
+@app.options(f"/{API_VERSION}/ping", summary="Apis options", response_description="Confirmation message")
+async def api_options():
     """
     Returns the allowed methods with status 204. Useful for test connection.
     """
@@ -263,3 +244,23 @@ async def options_for_some_resource():
         "Content-Length": "0",
     }
     return Response(status_code=204, headers=headers)
+
+
+#delete
+@app.delete(f"/{API_VERSION}/delete/{{userId}}", summary="Deletes a user by userID", response_description="Confirmation message")
+async def delete_user_john(userId):
+    """
+    Delete a user based on their userId.
+
+    - **userId**: The userId of the user to be deleted.
+
+    Returns a confirmation message upon successful deletion.
+    """
+    try:
+        response = table.delete_item(
+                Key={'userId': userId}
+                )
+        return {"response":response,"message": "User deleted successfully"}
+
+    except boto3.exceptions.Boto3Error as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
