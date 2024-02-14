@@ -1,29 +1,26 @@
 from datetime import datetime
-from typing import Annotated
-from uuid import UUID, uuid4
+from uuid import uuid4
 
 import boto3
-from boto3.dynamodb.conditions import Attr, Key
-from fastapi import Body, FastAPI, HTTPException, Query, status, Response
+from boto3.dynamodb.conditions import Attr
+from fastapi import FastAPI, HTTPException, Query, Response, status
 from pydantic import BaseModel, EmailStr
 
-# Set up DynamoDB connection
-# In production, you would use environment variables or IAM roles
+API_VERSION = "v1"
+
+# In production, you would use environment variables
 # Initialize a DynamoDB client
 dynamodb = boto3.resource('dynamodb')
 
 # Reference your table
 table = dynamodb.Table('users')
 
+
 class User(BaseModel):
-    # userID: UUID = None
     full_name: str
     username: str
     email: EmailStr
     nationality: str
-    # is_active: bool = True
-    # created_at: Annotated[datetime | None, Body()] = None,
-    # modified_at: Annotated[datetime | None, Body()] = None,
 
 app = FastAPI(
     title="User Management API",
@@ -31,21 +28,17 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# Helper function to check if the username or email already exists
+# Auxiliar function to check if the username or email already exists
 def check_user_exists(username: str, email: str) -> bool:
     # Query to check for the username or email
     response = table.scan(
         FilterExpression=Attr('username').eq(username) | Attr('email').eq(email)
     )
-    # print("\n\n check_user_exists")
-    # print("\n\n Items in response", 'Items' in response)
-    # print("\n\n len(response[Items]) > 0",  len(response['Items']) > 0)
-    # print("response:", 'Items' in response and len(response['Items']) > 0)
     
     return 'Items' in response and len(response['Items']) > 0
 
 #create user
-@app.post("/users", summary="Creates a new user", response_description="The created user data", responses={400: {"description": "Username or email already exists"}})
+@app.post(f"/{API_VERSION}users", summary="Creates a new user", response_description="The created user data", responses={400: {"description": "Username or email already exists"}})
 async def create_user(user: User):
     """
     Create a new user in the database.
@@ -87,7 +80,7 @@ async def create_user(user: User):
 
 
 #update
-@app.patch("/users/{username}", summary="Updates an existing user", response_description="Confirmation message")
+@app.patch(f"/{API_VERSION}/users/{{username}}", summary="Updates an existing user", response_description="Confirmation message")
 async def update_user(username: str, user: User):
     """
     Update an existing user's details based on their username.
@@ -131,7 +124,7 @@ async def update_user(username: str, user: User):
     return {"message": "User updated successfully"}
 
 
-@app.get("/users/", summary="Lists all users", response_description="List of users")
+@app.get(f"/{API_VERSION}/users/", summary="Lists all users", response_description="List of users")
 async def list_users(filter: str = Query(None, description="Filter key and value separated by ':'"), fields: str = Query(None, description="Comma-separated list of fields to return")):
     """
     Retrieve a list of users with optional filtering and field selection.
@@ -170,7 +163,7 @@ async def list_users(filter: str = Query(None, description="Filter key and value
     return filtered_items
 
 #delete
-@app.delete("/delete/{userId}", summary="Deletes a user by userID", response_description="Confirmation message")
+@app.delete(f"/{API_VERSION}/delete/{{userId}}", summary="Deletes a user by userID", response_description="Confirmation message")
 async def delete_user_john(userId):
     """
     Delete a user based on their userId.
@@ -189,7 +182,7 @@ async def delete_user_john(userId):
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
 #delete
-@app.delete("/users/{username}", summary="Deletes a user by username", response_description="Confirmation message")
+@app.delete(f"/{API_VERSION}/users/{{username}}", summary="Deletes a user by username", response_description="Confirmation message")
 async def delete_user(username: str):
     """
     Delete a user based on their username.
@@ -218,8 +211,8 @@ async def delete_user(username: str):
 
 
 #deactivate
-@app.patch("/users/deactivate/{username}", summary="Deactivates a user", response_description="Confirmation message")
-async def deactivate_user(username: str):
+@app.patch(f"/{API_VERSION}/users/deactivate/{{username}}", summary="Deactivates a user", response_description="Confirmation message")
+async def deactivate_user(username: str, user: User):
     """
     Deactivate a user account based on their username.
 
@@ -260,7 +253,7 @@ async def deactivate_user(username: str):
     return {"message": "User deactivated successfully"}
 
 
-@app.options("/ping")
+@app.options(f"/{API_VERSION}/ping")
 async def options_for_some_resource():
     """
     Returns the allowed methods with status 204. Useful for test connection.
