@@ -1,1 +1,427 @@
-{"openapi":"3.1.0","info":{"title":"User Management API","description":"User Management API documentation - https://github.com/TiagoSRodrigues/users-management-api","version":"1.0.0"},"paths":{"/v1/users":{"post":{"summary":"Creates a new user","description":"Create a new user in the database.\n\n- **full_name**: Full name of the user.\n- **username**: Unique username for the user.\n- **email**: Email address of the user.\n- **nationality**: Nationality of the user.\n\nReturns the details of the created user including `userId`, `created_at`, and `modified_at` timestamps.","operationId":"create_user_v1_users_post","requestBody":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/User"}}},"required":true},"responses":{"201":{"description":"User created","content":{"application/json":{"schema":{}}}},"400":{"description":"Bad Request - Username or email already exists"},"401":{"description":"Unauthorized - Authentication credentials were not provided or are invalid"},"403":{"description":"Forbidden - The user does not have the necessary permissions"},"404":{"description":"Not Found - The resource was not found"},"408":{"description":"Request Timeout - The server timed out waiting for the request"},"422":{"description":"Unprocessable Entity - invalid request"},"500":{"description":"Internal Server Error - An error occurred on the server"}}}},"/v1/users/{username}":{"patch":{"summary":"Updates an existing user","description":"Update an existing user's details based on their username.\n\n- **username**: The username of the user to be updated.\n- **user**: The user data to update.\n\nReturns a confirmation message upon successful update.","operationId":"update_user_v1_users__username__patch","parameters":[{"name":"username","in":"path","required":true,"schema":{"type":"string","title":"Username"}}],"requestBody":{"required":true,"content":{"application/json":{"schema":{"$ref":"#/components/schemas/User"}}}},"responses":{"200":{"description":"User updated","content":{"application/json":{"schema":{}}}},"400":{"description":"Bad Request - Username or email already exists"},"401":{"description":"Unauthorized - Authentication credentials were not provided or are invalid"},"403":{"description":"Forbidden - The user does not have the necessary permissions"},"404":{"description":"Not Found - The resource was not found"},"408":{"description":"Request Timeout - The server timed out waiting for the request"},"422":{"description":"Unprocessable Entity - invalid request"},"500":{"description":"Internal Server Error - An error occurred on the server"}}},"delete":{"summary":"Deletes a user by username","description":"Delete a user based on their username.\n\n- **username**: The username of the user to be deleted.\n\nReturns a confirmation message upon successful deletion.","operationId":"delete_user_v1_users__username__delete","parameters":[{"name":"username","in":"path","required":true,"schema":{"type":"string","title":"Username"}}],"responses":{"200":{"description":"Confirmation message","content":{"application/json":{"schema":{}}}},"201":{"description":"User Deleted"},"400":{"description":"Bad Request - Username or email already exists"},"401":{"description":"Unauthorized - Authentication credentials were not provided or are invalid"},"403":{"description":"Forbidden - The user does not have the necessary permissions"},"404":{"description":"Not Found - The resource was not found"},"408":{"description":"Request Timeout - The server timed out waiting for the request"},"422":{"description":"Unprocessable Entity - invalid request"},"500":{"description":"Internal Server Error - An error occurred on the server"}}}},"/v1/users/":{"get":{"summary":"Lists all users","description":"Retrieve a list of users with optional filtering and field selection.\n\n- **filter**: Filter the users based on a key-value pair.\n- **fields**: Specify which fields to include in the response for each user.\n\nReturns a list of users according to the specified filters and fields.","operationId":"list_users_v1_users__get","parameters":[{"name":"filter","in":"query","required":false,"schema":{"type":"string","description":"Filter key and value separated by ':'","title":"Filter"},"description":"Filter key and value separated by ':'"},{"name":"fields","in":"query","required":false,"schema":{"type":"string","description":"Comma-separated list of fields to return","title":"Fields"},"description":"Comma-separated list of fields to return"}],"responses":{"200":{"description":"List of users","content":{"application/json":{"schema":{}}}},"201":{"description":"Success"},"400":{"description":"Bad Request - Username or email already exists"},"401":{"description":"Unauthorized - Authentication credentials were not provided or are invalid"},"403":{"description":"Forbidden - The user does not have the necessary permissions"},"404":{"description":"Not Found - The resource was not found"},"408":{"description":"Request Timeout - The server timed out waiting for the request"},"422":{"description":"Unprocessable Entity - invalid request"},"500":{"description":"Internal Server Error - An error occurred on the server"}}}},"/v1/users/deactivate/{username}":{"patch":{"summary":"Deactivates a user","description":"Deactivate a user account based on their username.\n\n- **username**: The username of the user to be deactivated.\n\nReturns a confirmation message upon successful deactivation.","operationId":"deactivate_user_v1_users_deactivate__username__patch","parameters":[{"name":"username","in":"path","required":true,"schema":{"type":"string","title":"Username"}}],"requestBody":{"required":true,"content":{"application/json":{"schema":{"$ref":"#/components/schemas/User"}}}},"responses":{"200":{"description":"Confirmation message","content":{"application/json":{"schema":{}}}},"201":{"description":"User deactivated"},"400":{"description":"Bad Request - Username or email already exists"},"401":{"description":"Unauthorized - Authentication credentials were not provided or are invalid"},"403":{"description":"Forbidden - The user does not have the necessary permissions"},"404":{"description":"Not Found - The resource was not found"},"408":{"description":"Request Timeout - The server timed out waiting for the request"},"422":{"description":"Unprocessable Entity - invalid request"},"500":{"description":"Internal Server Error - An error occurred on the server"}}}},"/v1/ping":{"options":{"summary":"Apis options","description":"Returns the allowed methods with status 204. Useful for test connection.","operationId":"api_options_v1_ping_options","responses":{"200":{"description":"Success","content":{"application/json":{"schema":{}}}}}}},"/v1/delete/{userId}":{"delete":{"summary":"Deletes a user by userID","description":"Delete a user based on their userId.\n\n- **userId**: The userId of the user to be deleted.\n\nReturns a confirmation message upon successful deletion.","operationId":"delete_user_john_v1_delete__userId__delete","parameters":[{"name":"userId","in":"path","required":true,"schema":{"title":"Userid"}}],"responses":{"200":{"description":"Confirmation message","content":{"application/json":{"schema":{}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}}}},"components":{"schemas":{"HTTPValidationError":{"properties":{"detail":{"items":{"$ref":"#/components/schemas/ValidationError"},"type":"array","title":"Detail"}},"type":"object","title":"HTTPValidationError"},"User":{"properties":{"full_name":{"type":"string","title":"Full Name"},"username":{"type":"string","title":"Username"},"email":{"type":"string","format":"email","title":"Email"},"nationality":{"type":"string","title":"Nationality"}},"type":"object","required":["full_name","username","email","nationality"],"title":"User"},"ValidationError":{"properties":{"loc":{"items":{"anyOf":[{"type":"string"},{"type":"integer"}]},"type":"array","title":"Location"},"msg":{"type":"string","title":"Message"},"type":{"type":"string","title":"Error Type"}},"type":"object","required":["loc","msg","type"],"title":"ValidationError"}}}}
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "User Management API",
+        "description": "User Management API documentation - https://github.com/TiagoSRodrigues/users-management-api",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/v1/users": {
+            "post": {
+                "summary": "Creates a new user",
+                "description": "Create a new user in the database.\n\n- **full_name**: Full name of the user.\n- **username**: Unique username for the user.\n- **email**: Email address of the user.\n- **nationality**: Nationality of the user.\n\nReturns the details of the created user including `userId`, `created_at`, and `modified_at` timestamps.",
+                "operationId": "create_user_v1_users_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/User"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "User created",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request - Username or email already exists"
+                    },
+                    "401": {
+                        "description": "Unauthorized - Authentication credentials were not provided or are invalid"
+                    },
+                    "403": {
+                        "description": "Forbidden - The user does not have the necessary permissions"
+                    },
+                    "404": {
+                        "description": "Not Found - The resource was not found"
+                    },
+                    "408": {
+                        "description": "Request Timeout - The server timed out waiting for the request"
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity - invalid request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error - An error occurred on the server"
+                    }
+                }
+            }
+        },
+        "/v1/users/{username}": {
+            "patch": {
+                "summary": "Updates an existing user",
+                "description": "Update an existing user's details based on their username.\n\n- **username**: The username of the user to be updated.\n- **user**: The user data to update.\n\nReturns a confirmation message upon successful update.",
+                "operationId": "update_user_v1_users__username__patch",
+                "parameters": [
+                    {
+                        "name": "username",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Username"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/User"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "User updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request - Username or email already exists"
+                    },
+                    "401": {
+                        "description": "Unauthorized - Authentication credentials were not provided or are invalid"
+                    },
+                    "403": {
+                        "description": "Forbidden - The user does not have the necessary permissions"
+                    },
+                    "404": {
+                        "description": "Not Found - The resource was not found"
+                    },
+                    "408": {
+                        "description": "Request Timeout - The server timed out waiting for the request"
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity - invalid request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error - An error occurred on the server"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Deletes a user by username",
+                "description": "Delete a user based on their username.\n\n- **username**: The username of the user to be deleted.\n\nReturns a confirmation message upon successful deletion.",
+                "operationId": "delete_user_v1_users__username__delete",
+                "parameters": [
+                    {
+                        "name": "username",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Username"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Confirmation message",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "201": {
+                        "description": "User Deleted"
+                    },
+                    "400": {
+                        "description": "Bad Request - Username or email already exists"
+                    },
+                    "401": {
+                        "description": "Unauthorized - Authentication credentials were not provided or are invalid"
+                    },
+                    "403": {
+                        "description": "Forbidden - The user does not have the necessary permissions"
+                    },
+                    "404": {
+                        "description": "Not Found - The resource was not found"
+                    },
+                    "408": {
+                        "description": "Request Timeout - The server timed out waiting for the request"
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity - invalid request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error - An error occurred on the server"
+                    }
+                }
+            }
+        },
+        "/v1/users/": {
+            "get": {
+                "summary": "Lists all users",
+                "description": "Retrieve a list of users with optional filtering and field selection.\n\n- **filter**: Filter the users based on a key-value pair.\n- **fields**: Specify which fields to include in the response for each user.\n\nReturns a list of users according to the specified filters and fields.",
+                "operationId": "list_users_v1_users__get",
+                "parameters": [
+                    {
+                        "name": "filter",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "description": "Filter key and value separated by ':'",
+                            "title": "Filter"
+                        },
+                        "description": "Filter key and value separated by ':'"
+                    },
+                    {
+                        "name": "fields",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "description": "Comma-separated list of fields to return",
+                            "title": "Fields"
+                        },
+                        "description": "Comma-separated list of fields to return"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of users",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "201": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "description": "Bad Request - Username or email already exists"
+                    },
+                    "401": {
+                        "description": "Unauthorized - Authentication credentials were not provided or are invalid"
+                    },
+                    "403": {
+                        "description": "Forbidden - The user does not have the necessary permissions"
+                    },
+                    "404": {
+                        "description": "Not Found - The resource was not found"
+                    },
+                    "408": {
+                        "description": "Request Timeout - The server timed out waiting for the request"
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity - invalid request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error - An error occurred on the server"
+                    }
+                }
+            }
+        },
+        "/v1/users/deactivate/{username}": {
+            "patch": {
+                "summary": "Deactivates a user",
+                "description": "Deactivate a user account based on their username.\n\n- **username**: The username of the user to be deactivated.\n\nReturns a confirmation message upon successful deactivation.",
+                "operationId": "deactivate_user_v1_users_deactivate__username__patch",
+                "parameters": [
+                    {
+                        "name": "username",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Username"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/User"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Confirmation message",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "201": {
+                        "description": "User deactivated"
+                    },
+                    "400": {
+                        "description": "Bad Request - Username or email already exists"
+                    },
+                    "401": {
+                        "description": "Unauthorized - Authentication credentials were not provided or are invalid"
+                    },
+                    "403": {
+                        "description": "Forbidden - The user does not have the necessary permissions"
+                    },
+                    "404": {
+                        "description": "Not Found - The resource was not found"
+                    },
+                    "408": {
+                        "description": "Request Timeout - The server timed out waiting for the request"
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity - invalid request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error - An error occurred on the server"
+                    }
+                }
+            }
+        },
+        "/v1/ping": {
+            "options": {
+                "summary": "Apis options",
+                "description": "Returns the allowed methods with status 204. Useful for test connection.",
+                "operationId": "api_options_v1_ping_options",
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/delete/{userId}": {
+            "delete": {
+                "summary": "Deletes a user by userID",
+                "description": "Delete a user based on their userId.\n\n- **userId**: The userId of the user to be deleted.\n\nReturns a confirmation message upon successful deletion.",
+                "operationId": "delete_user_john_v1_delete__userId__delete",
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "title": "Userid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Confirmation message",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "HTTPValidationError": {
+                "properties": {
+                    "detail": {
+                        "items": {
+                            "$ref": "#/components/schemas/ValidationError"
+                        },
+                        "type": "array",
+                        "title": "Detail"
+                    }
+                },
+                "type": "object",
+                "title": "HTTPValidationError"
+            },
+            "User": {
+                "properties": {
+                    "full_name": {
+                        "type": "string",
+                        "title": "Full Name"
+                    },
+                    "username": {
+                        "type": "string",
+                        "title": "Username"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "title": "Email"
+                    },
+                    "nationality": {
+                        "type": "string",
+                        "title": "Nationality"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "full_name",
+                    "username",
+                    "email",
+                    "nationality"
+                ],
+                "title": "User"
+            },
+            "ValidationError": {
+                "properties": {
+                    "loc": {
+                        "items": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "integer"
+                                }
+                            ]
+                        },
+                        "type": "array",
+                        "title": "Location"
+                    },
+                    "msg": {
+                        "type": "string",
+                        "title": "Message"
+                    },
+                    "type": {
+                        "type": "string",
+                        "title": "Error Type"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "loc",
+                    "msg",
+                    "type"
+                ],
+                "title": "ValidationError"
+            }
+        }
+    }
+}
