@@ -38,7 +38,17 @@ def check_user_exists(username: str, email: str) -> bool:
     return 'Items' in response and len(response['Items']) > 0
 
 #create user
-@app.post(f"/{API_VERSION}/users", summary="Creates a new user", response_description="The created user data", responses={400: {"description": "Username or email already exists"}})
+@app.post(f"/{API_VERSION}/users", summary="Creates a new user",
+          response_description="The created user data",
+          responses={
+                201: {"description": "User created"},
+                400: {"description": "Bad Request - Username or email already exists"},
+                401: {"description": "Unauthorized - Authentication credentials were not provided or are invalid"},
+                403: {"description": "Forbidden - The user does not have the necessary permissions"},
+                404: {"description": "Not Found - The resource was not found"},
+                408: {"description": "Request Timeout - The server timed out waiting for the request"},
+                500: {"description": "Internal Server Error - An error occurred on the server"}
+            },          status_code=status.HTTP_201_CREATED)
 async def create_user(user: User):
     """
     Create a new user in the database.
@@ -80,7 +90,16 @@ async def create_user(user: User):
 
 
 #update
-@app.patch(f"/{API_VERSION}/users/{{username}}", summary="Updates an existing user", response_description="Confirmation message")
+@app.patch(f"/{API_VERSION}/users/{{username}}", summary="Updates an existing user", response_description="Confirmation message",
+                     responses={
+                200: {"description": "User updated"},
+                400: {"description": "Bad Request - Username or email already exists"},
+                401: {"description": "Unauthorized - Authentication credentials were not provided or are invalid"},
+                403: {"description": "Forbidden - The user does not have the necessary permissions"},
+                404: {"description": "Not Found - The resource was not found"},
+                408: {"description": "Request Timeout - The server timed out waiting for the request"},
+                500: {"description": "Internal Server Error - An error occurred on the server"}
+            }, )
 async def update_user(username: str, user: User):
     """
     Update an existing user's details based on their username.
@@ -124,7 +143,16 @@ async def update_user(username: str, user: User):
     return {"message": "User updated successfully"}
 
 
-@app.get(f"/{API_VERSION}/users/", summary="Lists all users", response_description="List of users")
+@app.get(f"/{API_VERSION}/users/", summary="Lists all users", response_description="List of users", 
+                   responses={
+                201: {"description": "Success"},
+                400: {"description": "Bad Request - Username or email already exists"},
+                401: {"description": "Unauthorized - Authentication credentials were not provided or are invalid"},
+                403: {"description": "Forbidden - The user does not have the necessary permissions"},
+                404: {"description": "Not Found - The resource was not found"},
+                408: {"description": "Request Timeout - The server timed out waiting for the request"},
+                500: {"description": "Internal Server Error - An error occurred on the server"}
+            }, )
 async def list_users(filter: str = Query(None, description="Filter key and value separated by ':'"), fields: str = Query(None, description="Comma-separated list of fields to return")):
     """
     Retrieve a list of users with optional filtering and field selection.
@@ -163,7 +191,16 @@ async def list_users(filter: str = Query(None, description="Filter key and value
     return filtered_items
 
 #delete
-@app.delete(f"/{API_VERSION}/users/{{username}}", summary="Deletes a user by username", response_description="Confirmation message")
+@app.delete(f"/{API_VERSION}/users/{{username}}", summary="Deletes a user by username", response_description="Confirmation message",
+            responses={
+                201: {"description": "User Deleted"},
+                400: {"description": "Bad Request - Username or email already exists"},
+                401: {"description": "Unauthorized - Authentication credentials were not provided or are invalid"},
+                403: {"description": "Forbidden - The user does not have the necessary permissions"},
+                404: {"description": "Not Found - The resource was not found"},
+                408: {"description": "Request Timeout - The server timed out waiting for the request"},
+                500: {"description": "Internal Server Error - An error occurred on the server"}
+            }, )
 async def delete_user(username: str):
     """
     Delete a user based on their username.
@@ -192,7 +229,16 @@ async def delete_user(username: str):
 
 
 #deactivate
-@app.patch(f"/{API_VERSION}/users/deactivate/{{username}}", summary="Deactivates a user", response_description="Confirmation message")
+@app.patch(f"/{API_VERSION}/users/deactivate/{{username}}", summary="Deactivates a user", response_description="Confirmation message", 
+        responses={
+                201: {"description": "User deactivated"},
+                400: {"description": "Bad Request - Username or email already exists"},
+                401: {"description": "Unauthorized - Authentication credentials were not provided or are invalid"},
+                403: {"description": "Forbidden - The user does not have the necessary permissions"},
+                404: {"description": "Not Found - The resource was not found"},
+                408: {"description": "Request Timeout - The server timed out waiting for the request"},
+                500: {"description": "Internal Server Error - An error occurred on the server"}
+            }, )
 async def deactivate_user(username: str, user: User):
     """
     Deactivate a user account based on their username.
@@ -234,7 +280,7 @@ async def deactivate_user(username: str, user: User):
     return {"message": "User deactivated successfully"}
 
 
-@app.options(f"/{API_VERSION}/ping", summary="Apis options", response_description="Confirmation message")
+@app.options(f"/{API_VERSION}/ping", summary="Apis options", response_description="Confirmation message", responses={200: {"description": "Success"}})
 async def api_options():
     """
     Returns the allowed methods with status 204. Useful for test connection.
@@ -243,7 +289,7 @@ async def api_options():
         "Allow": "GET, POST, PATCH, DELETE, OPTIONS",
         "Content-Length": "0",
     }
-    return Response(status_code=204, headers=headers)
+    return Response(status_code=200, headers=headers)
 
 
 #delete
