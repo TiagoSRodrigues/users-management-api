@@ -156,7 +156,8 @@ async def update_user(username: str, user: User):
                 422: {"description": "Unprocessable Entity - invalid request"},
                 500: {"description": "Internal Server Error - An error occurred on the server"}
             }, )
-async def list_users(filter: str = Query(None, description="Filter key and value separated by ':'"), fields: str = Query(None, description="Comma-separated list of fields to return")):
+async def list_users(filter: str = Query(None, description="Filter key and value separated by ':'"),
+                     fields: str = Query(None, description="Comma-separated list of fields to return")):
     """
     Retrieve a list of users with optional filtering and field selection.
 
