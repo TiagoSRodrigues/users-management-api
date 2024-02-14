@@ -38,7 +38,7 @@ def check_user_exists(username: str, email: str) -> bool:
     return 'Items' in response and len(response['Items']) > 0
 
 #create user
-@app.post(f"/{API_VERSION}users", summary="Creates a new user", response_description="The created user data", responses={400: {"description": "Username or email already exists"}})
+@app.post(f"/{API_VERSION}/users", summary="Creates a new user", response_description="The created user data", responses={400: {"description": "Username or email already exists"}})
 async def create_user(user: User):
     """
     Create a new user in the database.
