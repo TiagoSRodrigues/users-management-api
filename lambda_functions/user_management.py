@@ -163,23 +163,23 @@ async def list_users(filter: str = Query(None, description="Filter key and value
     return filtered_items
 
 #delete
-@app.delete(f"/{API_VERSION}/delete/{{userId}}", summary="Deletes a user by userID", response_description="Confirmation message")
-async def delete_user_john(userId):
-    """
-    Delete a user based on their userId.
+# @app.delete(f"/{API_VERSION}/delete/{{userId}}", summary="Deletes a user by userID", response_description="Confirmation message")
+# async def delete_user_john(userId):
+#     """
+#     Delete a user based on their userId.
 
-    - **userId**: The userId of the user to be deleted.
+#     - **userId**: The userId of the user to be deleted.
 
-    Returns a confirmation message upon successful deletion.
-    """
-    try:
-        response = table.delete_item(
-                Key={'userId': userId}
-                )
-        return {"response":response,"message": "User deleted successfully"}
+#     Returns a confirmation message upon successful deletion.
+#     """
+#     try:
+#         response = table.delete_item(
+#                 Key={'userId': userId}
+#                 )
+#         return {"response":response,"message": "User deleted successfully"}
 
-    except boto3.exceptions.Boto3Error as e:
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+#     except boto3.exceptions.Boto3Error as e:
+#         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
 #delete
 @app.delete(f"/{API_VERSION}/users/{{username}}", summary="Deletes a user by username", response_description="Confirmation message")
